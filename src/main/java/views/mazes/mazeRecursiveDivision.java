@@ -11,7 +11,7 @@ public class mazeRecursiveDivision {
     int act_cols;
 
     ArrayList<ArrayList<BoxUi>> board;
-    ArrayList<BoxUi> wallQueue; // adding the queue for bix to be animated
+    ArrayList<BoxUi> wallQueue; // adding the queue for box to be animated
 
 
     public mazeRecursiveDivision(int row, int col, ArrayList<ArrayList<BoxUi>> boxes) {
