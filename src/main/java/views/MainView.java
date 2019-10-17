@@ -11,6 +11,8 @@ import views.mazes.mazeRecursiveDivision;
 
 import java.util.ArrayList;
 
+
+
 @Route("")
 @PWA(name = "Path Finding", shortName = "Path Finding")
 public class MainView extends VerticalLayout {
@@ -38,12 +40,13 @@ public class MainView extends VerticalLayout {
             for (BoxUi box : row)
                 if (box.getStatus().equals("wall"))
                     box.setUnvisited();
+    }
 
-        try {
-            Thread.sleep(20);
-        } catch (InterruptedException e) {
-            System.out.println(e);
-        }
+    public void resetBoard(){
+        for (ArrayList<BoxUi> row : boxes)
+            for (BoxUi box : row)
+                    box.setUnvisited();
+        setDefault();
     }
 
     public void breadthFirstSearch() {
@@ -127,9 +130,8 @@ public class MainView extends VerticalLayout {
         setDefault();
 
         // add button event listener
-        menu.clearBoard.addClickListener(event -> {
-            clearWall();
-            setDefault();
+        menu.resetBoard.addClickListener(event -> {
+            resetBoard();
         });
         menu.clearWall.addClickListener(event -> {
             clearWall();
@@ -143,3 +145,5 @@ public class MainView extends VerticalLayout {
 
     }
 }
+
+

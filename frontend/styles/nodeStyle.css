@@ -35,7 +35,25 @@
     border: 1px solid rgb(175, 216, 248);
 }
 
+.visited {
+    background: lightgreen;
+    border: 1px solid rgb(175, 216, 248);
+}
 
+.shadow {
+    background: rgb(175, 216, 248);
+    border: 1px solid rgb(175, 216, 248);
+}
+
+.start {
+    background: yellow;
+    border: 1px solid rgb(175, 216, 248);
+}
+
+.target {
+    background: red;
+    border: 1px solid rgb(175, 216, 248);
+}
 
 /*.unvisited:active:hover {*/
 /*    background: orange;*/

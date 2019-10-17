@@ -7,7 +7,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class MenuBanner extends HorizontalLayout {
     public ComboBox<String> algorithms, mazes, speed;
-    public Button visualize, makeMaze, clearBoard, clearPath, clearWall;
+    public Button visualize, makeMaze, resetBoard, clearPath, clearWall;
     public MenuBanner() {
         getStyle().set("align-items", "baseline");
         getStyle().set("margin-bottom", "40px");
@@ -28,8 +28,8 @@ public class MenuBanner extends HorizontalLayout {
         visualize.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         makeMaze = new Button("Make Maze");
         makeMaze.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        clearBoard = new Button("Clear Board");
-        clearBoard.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        resetBoard = new Button("Reset Board");
+        resetBoard.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         clearPath = new Button("Clear Path");
         clearPath.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         clearWall = new Button("Clear Wall");
@@ -40,7 +40,7 @@ public class MenuBanner extends HorizontalLayout {
         add(speed);
         add(visualize);
         add(makeMaze);
-        add(clearBoard);
+        add(resetBoard);
         add(clearPath);
         add(clearWall);
     }

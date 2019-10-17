@@ -4,6 +4,9 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.polymertemplate.EventHandler;
 import com.vaadin.flow.templatemodel.TemplateModel;
+import org.vaadin.stefan.dnd.drag.DragSourceExtension;
+import org.vaadin.stefan.dnd.drop.DropTargetExtension;
+import views.Variable;
 
 
 /**
@@ -15,13 +18,18 @@ import com.vaadin.flow.templatemodel.TemplateModel;
 
 
 @Tag("div")
-//@Tag("box-ui")
-//@JsModule("./box-ui.js")
 @CssImport("./styles/nodeStyle.css")
-//public class BoxUi extends PolymerTemplate<BoxUi.BoxUiModel> {
 public class BoxUi extends Component {
     private String status;
     private int indexR, indexC;
+    final String WALL = "wall";
+    final String UNVISITED = "unvisited";
+    final String VISITED = "visited";
+    final String START = "start";
+    final String TARGET = "target";
+    final String SHADOW = "shadow";
+
+
 
     public BoxUi() {
         getElement().getStyle().set("width", "25px");
@@ -32,6 +40,46 @@ public class BoxUi extends Component {
             handleClick();
         });
 
+        DragSourceExtension<BoxUi> extend = DragSourceExtension.extend(this);
+        extend.addDragStartListener(event -> {
+            if (event.getComponent().getStatus().equals(START))
+                Variable.isStart = true;
+            else if (event.getComponent().getStatus().equals(TARGET))
+                Variable.isTarget = true;
+            else {
+                Variable.isStart = false;
+                Variable.isTarget = false;
+            }
+        });
+
+
+        DropTargetExtension<BoxUi> dropTargetExtension = DropTargetExtension.extend(this);
+        dropTargetExtension.addDragEnterListener(event -> {
+            event.getDragSource().ifPresent(e -> {
+                if (Variable.isStart || Variable.isTarget)
+                    event.getComponent().setShadow();
+                else
+                    event.getComponent().setWall();
+            });
+        });
+
+        dropTargetExtension.addDragLeaveListener(event -> {
+            event.getDragSource().ifPresent(e -> {
+                if(!event.getComponent().getStatus().equals(WALL))
+                    event.getComponent().setUnvisited();
+            });
+        });
+
+        dropTargetExtension.addDropListener(event -> {
+            event.getDragSource().ifPresent(e -> {
+                if (Variable.isStart)
+                    event.getComponent().setStart();
+                else if (Variable.isTarget)
+                    event.getComponent().setTarget();
+                Variable.isStart = false;
+                Variable.isTarget = false;
+            });
+        });
     }
 
     public String getStatus() {
@@ -56,49 +104,71 @@ public class BoxUi extends Component {
         return new int[]{indexR, indexC};
     }
 
-    public void setUnvisited() {
+    private void clearClass(){
         getElement().getStyle().set("animation-delay", "0ms");
-        getElement().getClassList().remove("wall");
-        getElement().getClassList().add("unvisited");
-        status = "unvisited";
+        if (getElement().getClassList().contains(WALL))
+            getElement().getClassList().remove(WALL);
+        if (getElement().getClassList().contains(SHADOW))
+            getElement().getClassList().remove(SHADOW);
+        if (getElement().getClassList().contains(TARGET))
+            getElement().getClassList().remove(TARGET);
+        if (getElement().getClassList().contains(UNVISITED))
+            getElement().getClassList().remove(UNVISITED);
+        if (getElement().getClassList().contains(VISITED))
+            getElement().getClassList().remove(VISITED);
+        if (getElement().getClassList().contains(START))
+            getElement().getClassList().remove(START);
+    }
+
+    public void setShadow() {
+        if(!status.equals(WALL)){
+            clearClass();
+            getElement().getClassList().add(SHADOW);
+        }
+    }
+
+    public void setUnvisited() {
+        clearClass();
+        getElement().getClassList().add(UNVISITED);
+        status = UNVISITED;
     }
 
     public void setVisited() {
-        getElement().getStyle().set("background", "green");
-        getElement().getStyle().set("border", "1px solid rgb(175, 216, 248)");
-        status = "visited";
+       clearClass();
+       getElement().getClassList().add(VISITED);
+        status = VISITED;
     }
 
     public void setStart() {
-        getElement().getStyle().set("background", "yellow");
-        getElement().getStyle().set("border", "1px solid rgb(175, 216, 248)");
-        status = "start";
+        clearClass();
+        getElement().getClassList().add(START);
+        status = START;
     }
 
     public void setTarget() {
-        getElement().getStyle().set("background", "red");
-        getElement().getStyle().set("border", "1px solid rgb(175, 216, 248)");
-        status = "target";
+        clearClass();
+        getElement().getClassList().add(TARGET);
+        status = TARGET;
     }
 
 
     public void setWall() {
-        getElement().getClassList().remove("unvisited");
-        getElement().getClassList().add("wall");
-        status = "wall";
+        clearClass();
+        getElement().getClassList().add(WALL);
+        status = WALL;
     }
 
     @EventHandler
     public void handleEvent() {
-        if(status.equals("unvisited"))
+        if(status.equals(UNVISITED))
             setWall();
     }
 
     @EventHandler
     public void handleClick() {
-        if(status.equals("unvisited"))
+        if(status.equals(UNVISITED))
             setWall();
-        else if (status.equals("wall"))
+        else if (status.equals(WALL))
             setUnvisited();
     }
 
