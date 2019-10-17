@@ -2,7 +2,6 @@ package views.component;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.polymertemplate.EventHandler;
 import com.vaadin.flow.templatemodel.TemplateModel;
 import org.vaadin.stefan.dnd.drag.DragSourceExtension;
 import org.vaadin.stefan.dnd.drop.DropTargetExtension;
@@ -22,12 +21,12 @@ import views.Variable;
 public class BoxUi extends Component {
     private String status;
     private int indexR, indexC;
-    final String WALL = "wall";
-    final String UNVISITED = "unvisited";
-    final String VISITED = "visited";
-    final String START = "start";
-    final String TARGET = "target";
-    final String SHADOW = "shadow";
+    private final String WALL = "wall";
+    private final String UNVISITED = "unvisited";
+    private final String VISITED = "visited";
+    private final String START = "start";
+    private final String TARGET = "target";
+    private final String SHADOW = "shadow";
 
 
 
@@ -105,7 +104,7 @@ public class BoxUi extends Component {
         return new int[]{indexR, indexC};
     }
 
-    private void clearClass(){
+    private void clearStyle(){
         getElement().getStyle().set("animation-delay", "0ms");
         if (getElement().getClassList().contains(WALL))
             getElement().getClassList().remove(WALL);
@@ -123,38 +122,38 @@ public class BoxUi extends Component {
 
     public void setShadow() {
         if(!status.equals(WALL)){
-            clearClass();
+            clearStyle();
             getElement().getClassList().add(SHADOW);
         }
     }
 
     public void setUnvisited() {
-        clearClass();
+        clearStyle();
         getElement().getClassList().add(UNVISITED);
         status = UNVISITED;
     }
 
     public void setVisited() {
-       clearClass();
+        clearStyle();
        getElement().getClassList().add(VISITED);
         status = VISITED;
     }
 
     public void setStart() {
-        clearClass();
+        clearStyle();
         getElement().getClassList().add(START);
         status = START;
     }
 
     public void setTarget() {
-        clearClass();
+        clearStyle();
         getElement().getClassList().add(TARGET);
         status = TARGET;
     }
 
 
     public void setWall() {
-        clearClass();
+        clearStyle();
         getElement().getClassList().add(WALL);
         status = WALL;
     }
