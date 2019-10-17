@@ -59,13 +59,14 @@ public class BoxUi extends Component {
                 if (Variable.isStart || Variable.isTarget)
                     event.getComponent().setShadow();
                 else
-                    event.getComponent().setWall();
+                    if (!(event.getComponent().getStatus().equals(START) || event.getComponent().getStatus().equals(TARGET)))
+                        event.getComponent().setWall();
             });
         });
 
         dropTargetExtension.addDragLeaveListener(event -> {
             event.getDragSource().ifPresent(e -> {
-                if(!event.getComponent().getStatus().equals(WALL))
+                if (!event.getComponent().getStatus().equals(WALL))
                     event.getComponent().setUnvisited();
             });
         });
@@ -158,13 +159,6 @@ public class BoxUi extends Component {
         status = WALL;
     }
 
-    @EventHandler
-    public void handleEvent() {
-        if(status.equals(UNVISITED))
-            setWall();
-    }
-
-    @EventHandler
     public void handleClick() {
         if(status.equals(UNVISITED))
             setWall();
