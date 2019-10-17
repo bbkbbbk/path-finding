@@ -51,10 +51,17 @@ public class BoxUi extends Component {
             }
         });
 
-
+        // BUG when start or target node drag over one another -> the node under will be set to unvisited
+        // why? bc the condition for drag leave will set everything apart from wall to unvisited
+        // BUG when start or target node being drag away to fast then the origin location (BoxUI) won't be set to visited
+        // which result in more then one start and target node
+        // BUG when start or target node is drag and drop into the position where there's no present of DropTargetExtension
+        // (out of the grid and the origin position has already set to unvisited after dropping then the start and target
+        // node will disappear bc it's origin has changed to unvisited
         DropTargetExtension<BoxUi> dropTargetExtension = DropTargetExtension.extend(this);
         dropTargetExtension.addDragEnterListener(event -> {
             event.getDragSource().ifPresent(e -> {
+                event.getComponent().getElement().getStyle().set("animation-delay", "0ms");
                 if (Variable.isStart || Variable.isTarget)
                     event.getComponent().setShadow();
                 else
@@ -105,7 +112,6 @@ public class BoxUi extends Component {
     }
 
     private void clearStyle(){
-        getElement().getStyle().set("animation-delay", "0ms");
         if (getElement().getClassList().contains(WALL))
             getElement().getClassList().remove(WALL);
         if (getElement().getClassList().contains(SHADOW))
@@ -159,6 +165,7 @@ public class BoxUi extends Component {
     }
 
     public void handleClick() {
+        getElement().getStyle().set("animation-delay", "0ms");
         if(status.equals(UNVISITED))
             setWall();
         else if (status.equals(WALL))

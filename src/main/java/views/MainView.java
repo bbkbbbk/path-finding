@@ -1,5 +1,6 @@
 package views;
 
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
@@ -20,6 +21,7 @@ public class MainView extends VerticalLayout {
     BoxUi start, target;
     final int NUMROW = 21;
     final int NUMCOL = 51;
+    private int speed = 5;
 
     public BoxRow createRow (int index) {
         BoxRow row = new BoxRow();
@@ -49,6 +51,12 @@ public class MainView extends VerticalLayout {
         setDefault();
     }
 
+    public void changeSpeed(int newSpeed){
+        this.speed = newSpeed;
+        Notification noti = new Notification(String.format("Chage to speed %s", this.speed), 2000, Notification.Position.TOP_END);
+        noti.open();
+    }
+
     public void breadthFirstSearch() {
         ArrayList template = new ArrayList();
         template.add(start);
@@ -67,10 +75,10 @@ public class MainView extends VerticalLayout {
         maze.makeBound();
 
         // draw maze without animation (appears immediately)
-        makeMaze(maze.getMaze());
+//        makeMaze(maze.getMaze());
 
         // draw maze with animation
-        // makeAnimation(maze.getWallQueue(), "maze");
+         makeAnimation(maze.getMaze(), "maze");
     }
 
     public void makeMaze(ArrayList<BoxUi> maze) {
@@ -80,23 +88,22 @@ public class MainView extends VerticalLayout {
     }
 
     public void makeAnimation(ArrayList<BoxUi> queue, String type) {
-        int count = 15;
+        int count = 20;
         boolean flag = true;
         for(BoxUi box: queue){
             if(flag) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                     flag = false;
                 } catch (InterruptedException e) {
                     System.out.println(e);
                 }
             }
-            String time = Integer.toString((count++) * 10 + 1000);
+            String time = Integer.toString((count++) * this.speed + 500);
+            box.getElement().getStyle().set("animation-delay", String.format("%sms", time));
 
-            if(type.equals("maze")) {
-                box.getElement().getStyle().set("animation-delay", String.format("%sms", time));
+            if(type.equals("maze"))
                 box.setWall();
-            }
         }
 
     }
@@ -128,6 +135,16 @@ public class MainView extends VerticalLayout {
 
         // set default start and target box
         setDefault();
+
+        //create change event listener
+        menu.speed.addValueChangeListener(event -> {
+            if (event.getValue().toLowerCase().equals("fast"))
+                changeSpeed(5);
+            else if (event.getValue().toLowerCase().equals("medium"))
+                changeSpeed(15);
+            else if (event.getValue().toLowerCase().equals("slow"))
+                changeSpeed(30);
+        });
 
         // add button event listener
         menu.resetBoard.addClickListener(event -> {
