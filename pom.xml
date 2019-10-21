@@ -115,6 +115,12 @@
             <artifactId>dnd</artifactId>
             <version>1.1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>eu.hurion.vaadin.heroku</groupId>
+            <artifactId>vaadin-for-heroku</artifactId>
+            <version>0.4</version>
+        </dependency>
     </dependencies>
 
     <build>
