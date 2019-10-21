@@ -18,7 +18,7 @@ import views.Variable;
 
 @Tag("div")
 @CssImport("./styles/nodeStyle.css")
-public class BoxUi extends Component {
+public class Box extends Component {
     private String status;
     private int indexR, indexC;
     private final String WALL = "wall";
@@ -30,7 +30,7 @@ public class BoxUi extends Component {
 
 
 
-    public BoxUi() {
+    public Box() {
         getElement().getStyle().set("width", "25px");
         getElement().getStyle().set("height", "25px");
         setUnvisited();
@@ -39,7 +39,7 @@ public class BoxUi extends Component {
             handleClick();
         });
 
-        DragSourceExtension<BoxUi> extend = DragSourceExtension.extend(this);
+        DragSourceExtension<Box> extend = DragSourceExtension.extend(this);
         extend.addDragStartListener(event -> {
             if (event.getComponent().getStatus().equals(START))
                 Variable.isStart = true;
@@ -58,7 +58,7 @@ public class BoxUi extends Component {
         // BUG when start or target node is drag and drop into the position where there's no present of DropTargetExtension
         // (out of the grid and the origin position has already set to unvisited after dropping then the start and target
         // node will disappear bc it's origin has changed to unvisited
-        DropTargetExtension<BoxUi> dropTargetExtension = DropTargetExtension.extend(this);
+        DropTargetExtension<Box> dropTargetExtension = DropTargetExtension.extend(this);
         dropTargetExtension.addDragEnterListener(event -> {
             event.getDragSource().ifPresent(e -> {
                 event.getComponent().getElement().getStyle().set("animation-delay", "0ms");
@@ -92,7 +92,10 @@ public class BoxUi extends Component {
     public String getStatus() {
         return status;
     }
-    public void setStatus(String s){ this.status = s;}
+    public Box setStatus(String s){
+        this.status = s;
+        return this;
+    }
 
     public void setIndex(int r, int c) {
         indexR = r;
@@ -124,6 +127,14 @@ public class BoxUi extends Component {
             getElement().getClassList().remove(VISITED);
         if (getElement().getClassList().contains(START))
             getElement().getClassList().remove(START);
+        if (getElement().getClassList().contains("blue"))
+            getElement().getClassList().remove("blue");
+    }
+
+    public void setBlue() {
+        clearStyle();
+        getElement().getClassList().add("blue");
+        status = UNVISITED;
     }
 
     public void setShadow() {

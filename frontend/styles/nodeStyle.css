@@ -7,8 +7,6 @@
     animation-iteration-count: 1;
     animation-fill-mode: forwards;
     animation-play-state: running;
-    height: 25px;
-    width: 25px;
     border: 1px solid rgb(12, 53, 71);
 }
 
@@ -55,6 +53,10 @@
     border: 1px solid rgb(175, 216, 248);
 }
 
+.blue {
+    background: deepskyblue;
+    border: 1px solid rgb(175, 216, 248);
+}
 /*.unvisited:active:hover {*/
 /*    background: orange;*/
 /*}*/

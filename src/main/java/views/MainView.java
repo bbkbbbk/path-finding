@@ -5,7 +5,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.PWA;
 import views.component.BoxRow;
-import views.component.BoxUi;
+import views.component.Box;
 import views.component.MenuBanner;
 import views.component.NavBar;
 import views.mazes.mazeRecursiveDivision;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
 @Route("")
 @PWA(name = "Path Finding", shortName = "Path Finding")
 public class MainView extends VerticalLayout {
-    private ArrayList<ArrayList<BoxUi>> boxes;
-    BoxUi start, target;
+    private ArrayList<ArrayList<Box>> boxes;
+    Box start, target;
     final int NUMROW = 21;
     final int NUMCOL = 51;
     private int speed = 5;
@@ -38,15 +38,15 @@ public class MainView extends VerticalLayout {
     }
 
     public void clearWall(){
-        for (ArrayList<BoxUi> row : boxes)
-            for (BoxUi box : row)
+        for (ArrayList<Box> row : boxes)
+            for (Box box : row)
                 if (box.getStatus().equals("wall"))
                     box.setUnvisited();
     }
 
     public void resetBoard(){
-        for (ArrayList<BoxUi> row : boxes)
-            for (BoxUi box : row)
+        for (ArrayList<Box> row : boxes)
+            for (Box box : row)
                     box.setUnvisited();
         setDefault();
     }
@@ -61,7 +61,7 @@ public class MainView extends VerticalLayout {
         ArrayList template = new ArrayList();
         template.add(start);
         template.add(new int[2]);
-        ArrayList<BoxUi> queue = new ArrayList<>();
+        ArrayList<Box> queue = new ArrayList<>();
 
         int[] dr = new int[]{-1, 1, 0, 0};
         int[] dc = new int[]{0, 0, 1, -1};
@@ -81,16 +81,16 @@ public class MainView extends VerticalLayout {
          makeAnimation(maze.getMaze(), "maze");
     }
 
-    public void makeMaze(ArrayList<BoxUi> maze) {
-        for(BoxUi box: maze){
+    public void makeMaze(ArrayList<Box> maze) {
+        for(Box box: maze){
             box.setWall();
         }
     }
 
-    public void makeAnimation(ArrayList<BoxUi> queue, String type) {
+    public void makeAnimation(ArrayList<Box> queue, String type) {
         int count = 20;
         boolean flag = true;
-        for(BoxUi box: queue){
+        for(Box box: queue){
             if(flag) {
                 try {
                     Thread.sleep(500);
@@ -118,9 +118,9 @@ public class MainView extends VerticalLayout {
         // create boxes
         boxes = new ArrayList<>();
         for (int i = 0; i < NUMROW; i++){
-            ArrayList<BoxUi> row = new ArrayList<>();
+            ArrayList<Box> row = new ArrayList<>();
             for (int j = 0; j < NUMCOL; j++) {
-                BoxUi box = new BoxUi();
+                Box box = new Box();
                 box.setIndex(i, j);
                 String id = String.format("%s-%s",i, j);
                 box.setId(id);

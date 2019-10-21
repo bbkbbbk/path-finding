@@ -1,6 +1,7 @@
 package views.mazes;
 
-import views.component.BoxUi;
+import com.vaadin.flow.component.notification.Notification;
+import views.component.Box;
 import java.util.*;
 
 public class mazeRecursiveDivision {
@@ -10,11 +11,11 @@ public class mazeRecursiveDivision {
     int act_rows;
     int act_cols;
 
-    ArrayList<ArrayList<BoxUi>> board;
-    ArrayList<BoxUi> wallQueue; // adding the queue for box to be animated
+    ArrayList<ArrayList<Box>> board;
+    ArrayList<Box> wallQueue; // adding the queue for box to be animated
 
 
-    public mazeRecursiveDivision(int row, int col, ArrayList<ArrayList<BoxUi>> boxes) {
+    public mazeRecursiveDivision(int row, int col, ArrayList<ArrayList<Box>> boxes) {
 
         //initialize instance variables
         rows = row * 2 + 1;
@@ -27,7 +28,9 @@ public class mazeRecursiveDivision {
 
     }
 
-    public ArrayList<BoxUi> getMaze() {
+    public ArrayList<Box> getMaze() {
+        Notification noti = new Notification(Integer.toString(wallQueue.size()), 2000, Notification.Position.TOP_CENTER);
+        noti.open();
         return wallQueue;
     }
 
