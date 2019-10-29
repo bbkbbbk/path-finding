@@ -1,0 +1,60 @@
+.wall{
+    animation-name: wallAnimation;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-delay: 0ms;
+    animation-direction: alternate;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
+    height: 25px;
+    width: 25px;
+    border: 1px solid rgb(12, 53, 71);
+}
+
+@keyframes wallAnimation {
+    0% {
+        transform: scale(.3);
+        background-color: rgb(12, 53, 71);
+    }
+
+    50% {
+        transform: scale(1.2);
+        background-color: rgb(12, 53, 71);
+    }
+
+    100% {
+        transform: scale(1.0);
+        background-color: rgb(12, 53, 71);
+        border: 1px solid rgb(12, 53, 71);
+    }
+}
+
+.unvisited {
+    background: white;
+    border: 1px solid rgb(175, 216, 248);
+}
+
+.visited {
+    background: lightgreen;
+    border: 1px solid rgb(175, 216, 248);
+}
+
+.shadow {
+    background: rgb(175, 216, 248);
+    border: 1px solid rgb(175, 216, 248);
+}
+
+.start {
+    background: yellow;
+    border: 1px solid rgb(175, 216, 248);
+}
+
+.target {
+    background: red;
+    border: 1px solid rgb(175, 216, 248);
+}
+
+/*.unvisited:active:hover {*/
+/*    background: orange;*/
+/*}*/
