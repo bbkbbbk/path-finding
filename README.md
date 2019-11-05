@@ -1,3 +1,3 @@
 # Path Finding
 
-http://pathfinding-env-1.6tudpsxnkp.us-east-2.elasticbeanstalk.com
+http://pathfinding-env.bpbsjawgun.ap-southeast-1.elasticbeanstalk.com/
