@@ -33,14 +33,75 @@
     border: 1px solid rgb(175, 216, 248);
 }
 
+/*.visited {*/
+/*    background: lightgreen;*/
+/*    border: 1px solid rgb(175, 216, 248);*/
+/*}*/
+
 .visited {
-    background: lightgreen;
+    animation-name: visitedAnimation;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-delay: 0ms;
+    animation-direction: alternate;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
     border: 1px solid rgb(175, 216, 248);
 }
 
+@keyframes visitedAnimation {
+    0% {
+        transform: scale(.3);
+        background-color: #24c1ff;
+    }
+
+    50% {
+        transform: scale(1.2);
+        background-color: #26dbff;
+    }
+
+    100% {
+        transform: scale(1.0);
+        background-color:  #24fff4;
+        border: 1px solid rgb(175, 216, 248);
+    }
+}
+
+
+/*.shadow {*/
+/*    background: rgb(175, 216, 248);*/
+/*    border: 1px solid rgb(175, 216, 248);*/
+/*}*/
+
 .shadow {
-    background: rgb(175, 216, 248);
+    animation-name: shadowAnimation;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-delay: 0ms;
+    animation-direction: alternate;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-play-state: running;
     border: 1px solid rgb(175, 216, 248);
+}
+
+@keyframes shadowAnimation {
+    0% {
+        transform: scale(.3);
+        background-color: #3899d1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        background-color: #3885d1;
+    }
+
+    100% {
+        transform: scale(1.0);
+        background-color: #386bd1;
+        border: 1px solid #386bd1;
+    }
 }
 
 .start {

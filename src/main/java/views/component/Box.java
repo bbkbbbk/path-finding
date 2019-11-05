@@ -18,7 +18,7 @@ import views.Variable;
 
 @Tag("div")
 @CssImport("./styles/nodeStyle.css")
-public class Box extends Component {
+public class Box extends Component implements Comparable {
     private String status;
     private int indexR, indexC;
     private final String WALL = "wall";
@@ -27,6 +27,9 @@ public class Box extends Component {
     private final String START = "start";
     private final String TARGET = "target";
     private final String SHADOW = "shadow";
+    //added two vars to Box : distance and predecessor(for shortest path search)
+    private int dist = Integer.MAX_VALUE;
+    private Box pre;
 
 
 
@@ -53,7 +56,7 @@ public class Box extends Component {
 
         // BUG when start or target node drag over one another -> the node under will be set to unvisited
         // why? bc the condition for drag leave will set everything apart from wall to unvisited
-        // BUG when start or target node being drag away to fast then the origin location (BoxUI) won't be set to visited
+        // BUG when start or target node being drag away to fast then the origin location (Box) won't be set to visited
         // which result in more then one start and target node
         // BUG when start or target node is drag and drop into the position where there's no present of DropTargetExtension
         // (out of the grid and the origin position has already set to unvisited after dropping then the start and target
@@ -65,8 +68,8 @@ public class Box extends Component {
                 if (Variable.isStart || Variable.isTarget)
                     event.getComponent().setShadow();
                 else
-                    if (!(event.getComponent().getStatus().equals(START) || event.getComponent().getStatus().equals(TARGET)))
-                        event.getComponent().setWall();
+                if (!(event.getComponent().getStatus().equals(START) || event.getComponent().getStatus().equals(TARGET)))
+                    event.getComponent().setWall();
             });
         });
 
@@ -79,10 +82,14 @@ public class Box extends Component {
 
         dropTargetExtension.addDropListener(event -> {
             event.getDragSource().ifPresent(e -> {
-                if (Variable.isStart)
+                if (Variable.isStart) {
                     event.getComponent().setStart();
-                else if (Variable.isTarget)
+                    Variable.start = event.getComponent();
+                }
+                else if (Variable.isTarget) {
                     event.getComponent().setTarget();
+                    Variable.target = event.getComponent();
+                }
                 Variable.isStart = false;
                 Variable.isTarget = false;
             });
@@ -92,15 +99,29 @@ public class Box extends Component {
     public String getStatus() {
         return status;
     }
-    public Box setStatus(String s){
-        this.status = s;
-        return this;
-    }
+    public void setStatus(String s){ this.status = s;}
 
     public void setIndex(int r, int c) {
         indexR = r;
         indexC = c;
     }
+
+    public int getDist() {
+        return dist;
+    }
+
+    public void setDist(int dist) {
+        this.dist = dist;
+    }
+
+    public Box getPre() {
+        return pre;
+    }
+
+    public void setPre(Box pre) {
+        this.pre = pre;
+    }
+
 
     public int getIndexR() {
         return indexR;
@@ -127,14 +148,6 @@ public class Box extends Component {
             getElement().getClassList().remove(VISITED);
         if (getElement().getClassList().contains(START))
             getElement().getClassList().remove(START);
-        if (getElement().getClassList().contains("blue"))
-            getElement().getClassList().remove("blue");
-    }
-
-    public void setBlue() {
-        clearStyle();
-        getElement().getClassList().add("blue");
-        status = UNVISITED;
     }
 
     public void setShadow() {
@@ -152,7 +165,7 @@ public class Box extends Component {
 
     public void setVisited() {
         clearStyle();
-       getElement().getClassList().add(VISITED);
+        getElement().getClassList().add(VISITED);
         status = VISITED;
     }
 
@@ -183,7 +196,15 @@ public class Box extends Component {
             setUnvisited();
     }
 
-    public interface BoxUiModel extends TemplateModel {
+    //used for priority queue in greedy algorithm
+    @Override
+    public int compareTo(Object o) {
+        if(this.dist > ((Box)o).dist) return 1;
+        if(this.dist < ((Box)o).dist) return -1;
+        else                   return 0;
+    }
+
+    public interface BoxModel extends TemplateModel {
         // Add setters and getters for template properties here.
     }
 
