@@ -1,3 +1,3 @@
 # Path Finding
 
-http://pathfinding-env.bpbsjawgun.ap-southeast-1.elasticbeanstalk.com/
+http://pathfinding2019-env.2qdqkzs5pe.ap-southeast-1.elasticbeanstalk.com

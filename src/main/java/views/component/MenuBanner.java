@@ -12,9 +12,7 @@ public class MenuBanner extends HorizontalLayout {
         getStyle().set("align-items", "baseline");
         getStyle().set("margin-bottom", "40px");
         algorithms = new ComboBox<>("Algorithms");
-//        algorithms.setItems("Dijkstra's Algorithm", "A* Search", "Greedy Breadth-first Search", "Swarm Algorithm",
-//                "Convergent Swarm Algorithm", "Bidirectional Swarm Algorithm", "Breadth-first Search", "Depth-first Search");
-        algorithms.setItems("Dijkstra's Algorithm", "Greedy Breadth-first Search", "Breadth-first Search", "Depth-first Search");
+        algorithms.setItems("Dijkstra's Algorithm", "A* Search", "Greedy Breadth-first Search", "Breadth-first Search", "Depth-first Search");
         algorithms.setPlaceholder("Dijkstra's Algorithm");
 
         mazes = new ComboBox<>("Mazes");

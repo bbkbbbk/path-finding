@@ -20,7 +20,7 @@ import java.util.*;
 @PWA(name = "Path Finding", shortName = "Path Finding")
 public class MainView extends VerticalLayout {
     private ArrayList<ArrayList<Box>> boxes;
-//    private Box start = Variable.start;
+    //    private Box start = Variable.start;
 //    private Box target = Variable.target;
     final int NUMROW = 21;
     final int NUMCOL = 51;
@@ -53,19 +53,36 @@ public class MainView extends VerticalLayout {
     public void clearPath(){
         for (ArrayList<Box> row : boxes)
             for (Box box : row)
-                if (box.getStatus().equals("visited") || box.getStatus().equals("shadow"))
+                if (box.getStatus().equals("visited") || box.getStatus().equals("shadow")) {
                     box.setUnvisited();
+                    box.setDist(Integer.MAX_VALUE);
+                    box.setPre(null);
+                }
     }
 
     public void resetBoard(){
         for (ArrayList<Box> row : boxes)
-            for (Box box : row)
+            for (Box box : row){
                 box.setUnvisited();
+                box.setDist(Integer.MAX_VALUE);
+                box.setPre(null);
+            }
+
         setDefault();
     }
 
     public void changeSpeed(int newSpeed){
         this.speed = newSpeed;
+    }
+
+    //manhattan distance (4 directions ) for A* (with tie breaking)
+    public double heuristic2(Box node){
+        int x =  Math.abs(node.getIndexC() - Variable.target.getIndexC());
+        int y = Math.abs(node.getIndexR() - Variable.target.getIndexR());
+        int x2 = Math.abs(Variable.start.getIndexC() - Variable.target.getIndexC());
+        int y2 = Math.abs(Variable.start.getIndexR() - Variable.target.getIndexR());
+        int cross = Math.abs(x*y2 - x2*y);
+        return cross*0.001;
     }
 
     //manhattan distance (4 directions)
@@ -77,8 +94,97 @@ public class MainView extends VerticalLayout {
         return val;
     }
 
+    public boolean searchForBox(Box Target, PriorityQueue queue){
+        Iterator value = queue.iterator();
+        Box temp;
+        int x, y;
+        while (value.hasNext()) {
+            temp = (Box)(value.next());
+            x = temp.getIndexC();
+            y = temp.getIndexR();
+            if (x == Target.getIndexC() && y == Target.getIndexR()){
+                if (temp.getDist() < Target.getDist()){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean AstarSearch(){
+//        System.out.println("A* algorithm shortest path");
+        PriorityQueue<Box> open = new PriorityQueue<>();
+        ArrayList<Box> result = new ArrayList<>();
+
+        //enqueue start and set as visited
+        Variable.start.setDist(0);
+        Variable.start.setStatus("visited");
+        open.add(Variable.start);
+        Box temp;
+        Box sideBox;
+
+        while(!open.isEmpty()){
+            temp = open.remove();
+            result.add(temp);
+            if (temp == Variable.target){
+                makeAnimation(result, "algo");
+                return true;
+            }
+
+            int row = temp.getIndexR();
+            int col = temp.getIndexC();
+//            System.out.println("x:"+row+" y:"+col);
+
+            //enqueue bottom box
+            if (row < NUMROW-1) {
+                sideBox = boxes.get(row+1).get(col);
+                visitNodePriorityQueue2(sideBox,temp,open);
+            }
+            //enqueue above box
+            if (row > 0) {
+                sideBox = boxes.get(row-1).get(col);
+                visitNodePriorityQueue2(sideBox,temp,open);
+            }
+            //enqueue box right
+            if (col < NUMCOL-1) {
+                sideBox = boxes.get(row).get(col+1);
+                visitNodePriorityQueue2(sideBox,temp,open);
+            }
+            //enqueue box left
+            if (col > 0) {
+                sideBox = boxes.get(row).get(col-1);
+                visitNodePriorityQueue2(sideBox,temp,open);
+            }
+            temp.setStatus("visited");
+
+        }
+
+        makeAnimation(result, "algo");
+        return false;
+    }
+
+    public void visitNodePriorityQueue2(Box sideBox, Box temp, PriorityQueue open){
+//        System.out.println("Add Node Enter");
+        if (sideBox.getStatus() != "wall"){
+            int dist = heuristic(sideBox)+temp.getDist()+1;
+//            System.out.println("dist"+dist);
+//            System.out.println("sideBox"+sideBox.getDist());
+//            System.out.println(sideBox.getStatus());
+            if (sideBox.getStatus() != "visited" && dist < sideBox.getDist()){
+//                System.out.println("Add noe for sure");
+                sideBox.setDist(dist);
+                sideBox.setPre(temp);
+                open.add(sideBox);
+
+            }
+        }
+    }
+
     public boolean greedyBFSearch(){
-        System.out.println("BFS shortest path");
+//        System.out.println("BFS shortest path");
         PriorityQueue<Box> queue = new PriorityQueue<>();
         ArrayList<Box> result = new ArrayList<>();
 
@@ -255,7 +361,7 @@ public class MainView extends VerticalLayout {
     //does not guarantee shortest path, will only find a path to target
     //
     public boolean depthFirstSearch(){
-        System.out.println("DFS shortest path");
+//        System.out.println("DFS shortest path");
         Stack<Box> stack = new Stack<Box>();
         ArrayList<Box> result = new ArrayList<>();
 
@@ -268,6 +374,7 @@ public class MainView extends VerticalLayout {
 
         while(!stack.isEmpty()){
             temp = stack.pop();
+            result.add(temp);
             if (temp == Variable.target){
                 makeAnimation(result, "algo");
                 return true;
@@ -370,7 +477,7 @@ public class MainView extends VerticalLayout {
         for(Box box: queue){
             if(flag) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(200);
                     flag = false;
                 } catch (InterruptedException e) {
                     System.out.println(e);
@@ -430,8 +537,7 @@ public class MainView extends VerticalLayout {
                 changeSpeed(30);
         });
 
-        //"Dijkstra's Algorithm", "A* Search", "Greedy Best-first Search", "Swarm Algorithm",
-        //"Convergent Swarm Algorithm", "Bidirectional Swarm Algorithm", "Breadth-first Search", "Depth-first Search"
+
         menu.algorithms.addValueChangeListener(event -> {
             if (event.getValue().equals("Dijkstra's Algorithm")){
                 this.algo_num = 0;
@@ -492,10 +598,13 @@ public class MainView extends VerticalLayout {
         });
 
         menu.makeMaze.addClickListener(event -> {
+            clearPath();
+            clearWall();
             createMaze();
         });
 
         menu.search.addClickListener(event ->{
+            clearPath();
             Notification noti = new Notification("Algorithm", 5000, Notification.Position.TOP_END);
             switch(algo_num){
                 case 0:
@@ -504,6 +613,9 @@ public class MainView extends VerticalLayout {
                     this.isFound = dijkstraAlgoSearch();
                     break;
                 case 1:
+                    noti.setText("A* Algorithm Search, combination of Best First Search and Dijkstra");
+                    noti.open();
+                    this.isFound = AstarSearch();
                     break;
                 case 2:
                     noti.setText("Greedy Algorithm Search, Does not guarantee the shortest path!");
@@ -549,9 +661,5 @@ public class MainView extends VerticalLayout {
                 noti.open();
             }
         });
-
-
-
-
     }
 }

@@ -1,10 +1,11 @@
 package views.mazes;
 
 import com.vaadin.flow.component.notification.Notification;
+import views.Maze;
 import views.component.Box;
 import java.util.*;
 
-public class RecursiveDivisionMaze {
+public class RecursiveDivisionMaze implements Maze {
 
     int rows;
     int cols;
@@ -91,9 +92,8 @@ public class RecursiveDivisionMaze {
 
         //draw a line at the halfway point
         for(int i=top; i<bottom; i++) {
-            if (board.get(i).get(divide).getStatus().equals("start") || board.get(i).get(divide).getStatus().equals("target"))
-                continue;
-            wallQueue.add(board.get(i).get(divide));
+            if (!board.get(i).get(divide).getStatus().equals("start") && !board.get(i).get(divide).getStatus().equals("target"))
+                wallQueue.add(board.get(i).get(divide));
         }
 
         // get a random odd integer between top and bottom and clear it
